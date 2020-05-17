@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# PreMiD Presence Metadata Test Suite (PreMiD-MTS), v1.0.0
+# Copyright (c) 2020, Hans5958
+# https://github.com/Hans5958/PreMiD-MTS
+# Licensed under MPL-2.0
+
 export VERSION="1.0.0"
-export REFERENCE="https://gist.github.com/Hans5958/88b83e20c24d2c60dacf9c2000363a82"
-export GREETING="\e[1;97mPreMiD Presence Metadata Test Suite\n\e[0;97mv$VERSION, by Hans5958\n\e[37m\"probably the most accurate test suite\"\n"
+export REFERENCE="https://github.com/Hans5958/PreMiD-MTS/wiki/Tests"
+export GREETING="\e[1;97mPreMiD Presence Metadata Test Suite, v$VERSION\n\e[0;97mCopyright (c) 2020, Hans5958\n\e[37m\"probably the most accurate test suite\"\n"
 
 export OFFLINE=false
 export LOG_LEVEL=1
