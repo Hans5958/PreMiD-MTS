@@ -16,7 +16,7 @@ This is also a PoC that it is possible to integrate metadata checking by using c
 
 ## Installation
 
-Just download the latest release [here](https://prithb.com/Hans5958/PreMiD-MTS/releases). 
+Just download the latest release [here](https://github.com/Hans5958/PreMiD-MTS/releases). 
 
 The ``.sh`` file includes the **main** variant of the program, and the ``.zip`` files includes the **main** and [**TAP**](https://en.wikipedia.org/wiki/Test_Anything_Protocol) variants.
 
