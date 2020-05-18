@@ -1,7 +1,3 @@
-export RETURN1=true
-export RETURN2=false
-export SUPP=false
-
 export TEST_MAIN_OK=0
 export TEST_MAIN_FAIL=0
 export TEST_MAIN_SKIP=0
@@ -146,7 +142,7 @@ test() {
         fi
     }
     test_ongoing() {
-        (! $TAP) && message="\e[107;30mONGO\e[0;97m \e[0;97m$test_name"
+        message="\e[107;30mONGO\e[0;97m \e[0;97m$test_name"
         RETURN1=true
         RETURN2=true
     }
@@ -154,7 +150,7 @@ test() {
 		if [[ $message != "blank" && $LOG_LEVEL -gt 0 ]]; then
             (! $NO_ANSI) && tput cuu 1 && tput el
 			if $supp; then
-				(! $TAP) && cecho "     $message"
+				cecho "     $message"
 			else
 				cecho "$message"
 			fi

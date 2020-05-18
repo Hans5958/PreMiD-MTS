@@ -41,7 +41,7 @@ cecho "└────────────┴──────────�
 
 echo ""
 if ((LOG_LEVEL > 0)); then
-	if [[ $((TEST_MAIN_FAIL + TEST_SUPP_FAIL)) -eq 0 ]]; then 
+	if [[ $TEST_TOTAL_FAIL -eq 0 ]]; then 
 		cecho "\e[42;97;1mTest passed!\e[0;97m"
 		cecho ""
 		cecho "\e[1;97mThe presence's metadata has passed the test suite!\e[0;97m"
@@ -59,9 +59,11 @@ if ((LOG_LEVEL > 0)); then
 		cecho "\e[4;37m$REFERENCE\e[0m"
 	fi 
 elif [[ $LOG_LEVEL -eq 0 ]]; then
-	if [[ $((TEST_MAIN_FAIL + TEST_SUPP_FAIL)) -eq 0 ]]; then 
+	if [[ $TEST_TOTAL_FAIL -eq 0 ]]; then 
 		cecho "\e[42;97mTest passed!\e[0m"
 	else
 		cecho "\e[41;1mTest failed!\e[0m"
 	fi
 fi
+
+exit $TEST_TOTAL_FAIL

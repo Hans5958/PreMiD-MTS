@@ -1,0 +1,10 @@
+# Changed
+
+- Sync changes on the TAP variation, somehow forgot about it
+- Move exports so it is on the top of the file
+- Remove unused TAP codes on the main variation
+- 
+
+# Fixed
+
+- Fix potential bug on variable assignment to avoid word splitting

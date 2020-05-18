@@ -1,7 +1,9 @@
 #!/bin/bash
 
+rm -rf dist
+mkdir dist
+
 export NUM_TYPE=$(ls -1q ./src/*/start.sh | wc -l)
-rm -rf dist/*
 
 for type in ./src/*/; do
     type_name=$(basename "$type")
@@ -27,7 +29,6 @@ for type in ./dist/*; do
 done
 
 echo -e "\e[97mPackaging...\e[0m"
-rm -rf ./dist/gh-rel
 mkdir ./dist/gh-rel
 
 zip ./dist/gh-rel/premid-mts.zip ./dist/*.sh
