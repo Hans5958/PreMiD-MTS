@@ -30,11 +30,11 @@ if [[ $(echo "$METADATA" | jq -c '.url | type == "array"') == true ]]; then
 	test "URL array length > 1" "$(echo "$METADATA" | jq -c '.url | length != 1')" false true
     for item64 in $(echo "$METADATA" | jq --compact-output --raw-output '.url[] | @base64'); do
         item=$(echo "$item64" | base64 -d)
-        test "URL $item valid" "$( (echo "$item" | grep -Eq "^([0-9A-Za-z_-]*\.*)*$") && echo "true" || echo "false" )" false true
+        test "URL $item valid" "$( (echo "$item" | grep -Pq "^(([a-z0-9-]+\\.)*[0-9a-z_-]+(\\.[a-z]+)+|(\\d{1,3}\\.){3}\\d{1,3}|localhost)$") && echo "true" || echo "false" )" false true
     done
 	test "URL valid" "$RETURN2"
 elif [[ $(echo "$METADATA" | jq -c '.url | type == "string"') == true ]]; then
-    test "URL valid" "$(echo "$METADATA" | jq -c '.url | test("^([0-9A-Za-z_-]*\\.*)*$")')"
+    test "URL valid" "$(echo "$METADATA" | jq -c '.url | test("^(([a-z0-9-]+\\.)*[0-9a-z_-]+(\\.[a-z]+)+|(\\d{1,3}\\.){3}\\d{1,3}|localhost)$")')"
 else 
     test "URL valid" false
 fi
@@ -43,20 +43,20 @@ test "Version present" "$(echo "$METADATA" | jq -c 'if has("version") then .vers
 test "Version valid" "$(echo "$METADATA" | jq -c '.version | test("^\\d+\\.\\d+\\.\\d+$")')"
 
 test "Logo present" "$(echo "$METADATA" | jq -c 'if has("logo") then .logo else false end')"
-test "Logo valid" "$(echo "$METADATA" | jq -c '.logo | test("\\b(([\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^[:punct:]\\s]|/)))")')"
+test "Logo valid" "$(echo "$METADATA" | jq -c '.logo | test("^https?:\\/\\/?(?:[a-z0-9-]+\\.)*[0-9a-z_-]+(?:\\.[a-z]+)+\\/.*$")')"
 
 test "Thumbnail present" "$(echo "$METADATA" | jq -c 'if has("thumbnail") then .thumbnail else false end')"
-test "Thumbnail valid" "$(echo "$METADATA" | jq -c '.thumbnail | test("\\b(([\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|([^[:punct:]\\s]|/)))")')"
+test "Thumbnail valid" "$(echo "$METADATA" | jq -c '.thumbnail | test("^https?:\\/\\/?(?:[a-z0-9-]+\\.)*[0-9a-z_-]+(?:\\.[a-z]+)+\\/.*$")')"
 
 test "Color present" "$(echo "$METADATA" | jq -c 'if has("color") then .thumbnail else false end')"
-test "Color valid" "$(echo "$METADATA" | jq -c '.color | test("^#[0-9a-fA-F]{3,6}$")')"
+test "Color valid" "$(echo "$METADATA" | jq -c '.color | test("^#([A-Fa-f0-9]{3}){1,2}$")')"
 
 test "Tags present" "$(echo "$METADATA" | jq -c 'if has("tags") then true else false end')"
 if [[ $(echo "$METADATA" | jq -c '.tags | type == "array"') == true ]]; then
     test "Tags valid" "ongoing"
     for item64 in $(echo "$METADATA" | jq --compact-output --raw-output '.tags[] | @base64'); do
         item="$(echo "$item64" | base64 -d)"
-        test "Tag $item valid" "$( (echo "$item" | grep -Pq "^[\p{Ll}\p{N}\p{Han}\p{Hangul}\p{Hiragana}\p{Katakana}\p{Han}-]+$") && echo "true" || echo "false" )" false true
+        test "Tag $item valid" "$( (echo "$item" | grep -Pq "^([^A-Z\s[:punct:]]-?)+$") && echo "true" || echo "false" )" false true
     done
 	test "Tags valid" "$RETURN2"
 else 
@@ -103,6 +103,20 @@ else
     test "iframe valid" false true
 fi
 
+test "Button present" "$(echo "$METADATA" | jq -c 'if has("button") then .button else false end')" true
+if [[ $RETURN1 == true ]]; then
+    test "Button valid" "$(echo "$METADATA" | jq -c '.button | type == "boolean"')" true
+else
+    test "Button valid" false true
+fi
+
+test "Warning present" "$(echo "$METADATA" | jq -c 'if has("warning") then .warning else false end')" true
+if [[ $RETURN1 == true ]]; then
+    test "Warning valid" "$(echo "$METADATA" | jq -c '.warning | type == "boolean"')" true
+else
+    test "Warning valid" false true
+fi
+
 test "Settings present" "$(echo "$METADATA" | jq -c 'if has("settings") then true else false end')" true
 if [[ $RETURN1 == true ]]; then
     test "Settings valid" "ongoing"
@@ -122,7 +136,7 @@ if [[ $RETURN1 == true ]]; then
         fi
         test "Setting icon present" "$(echo "$item" | jq -c 'if has("icon") then .icon else false end')" false true
         if [[ $RETURN1 == true ]]; then
-            test "Setting icon valid" "$(echo "$item" | jq -c '.icon | test("^fa[bs] fa-[0-9A-Za-z-]+$")')" false true
+            test "Setting icon valid" "$(echo "$item" | jq -c '.icon | test("^fa[bs] fa-[0-9a-z-]+$")')" false true
         else
             test "Setting icon valid" false true true
         fi
@@ -150,6 +164,13 @@ if [[ $RETURN1 == true ]]; then
         else
             test "Setting values valid" false true true
         fi
+        test "Setting multi language present" "$(echo "$item" | jq -c 'if has("multiLanguage") then .multiLanguage else false end')" true true
+        if [[ $RETURN1 == true ]]; then
+            test "Setting multi language valid" "$(echo "$item" | jq -c '.multiLanguage | type == "boolean" or type == "string" or type == "array"')" false true
+        else
+            test "Setting multi language valid" false true true
+        fi
+
     done
     test "Settings valid" "$RETURN2"
 else
