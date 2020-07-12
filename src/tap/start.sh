@@ -83,29 +83,29 @@ test() {
     local message="blank"
     local test_name=$1
     local test_result=$2
-    local optional=${3:-true}
+    local optional=${3:-false}
     local supp=${4:-false}
 
     test_ok() {
-        local MESSAGE="ok $test_name"
+        message="ok $test_name"
         export RETURN1=true
     }
     test_fail() {
-        local MESSAGE="not ok $test_name"
-        export RETURN1=false
-        export RETURN2=false
+        message="not ok $test_name"
+        RETURN1=false
+        RETURN2=false
     }
     test_skip() {
-        local MESSAGE="ok $test_name # skip"
-        export RETURN1=false
+        message="ok $test_name # skip"
+        RETURN1=false
     }
     test_ongoing() {
-        export RETURN1=true
-        export RETURN2=true
+        RETURN1=true
+        RETURN2=true
     }
     send_message() {
-		if [[ $MESSAGE != "blank" ]]; then
-            echo -e "$MESSAGE"
+		if [[ $message != "blank" ]] && [[ $supp == false ]]; then
+            echo -e "$message"
 		fi
     }
 
@@ -145,4 +145,4 @@ test_message() {
     esac
 }
 
-echo "1..30"
+echo "1..$MAIN_TESTS"

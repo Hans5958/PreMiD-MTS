@@ -82,6 +82,7 @@ if [[ $RETURN1 == true ]]; then
 else
     test "Contributors valid" false true
 fi
+
 test "regExp present" "$(echo "$METADATA" | jq -c 'if has("regExp") then .regExp else false end')" true
 if [[ $RETURN1 == true ]]; then
     test "regExp valid" "$(echo "$METADATA" | jq -c '.regExp | type == "string"')" true
@@ -175,6 +176,18 @@ if [[ $RETURN1 == true ]]; then
     test "Settings valid" "$RETURN2"
 else
     test "Settings valid" false true
+fi
+
+test "Altnames present" "$(echo "$METADATA" | jq -c 'if has("altnames") then true else false end')" true
+if [[ $RETURN1 == true ]]; then
+    test "Altnames valid" "ongoing"
+    for item64 in $(echo "$METADATA" | jq --compact-output --raw-output '.altnames[] | @base64'); do
+        item="$(echo "$item64" | base64 -d)"
+        test "Altname $item valid" "$(echo "{\"t\": \"$item\"}" | jq -c '.t | type == "string"')" false true
+    done
+    test "Altnames valid" "$RETURN2"
+else
+    test "Altnames valid" false true
 fi
 
 test_message finished

@@ -110,7 +110,7 @@ test() {
     local message="blank"
     local test_name=$1
     local test_result=${2//%/%%}
-    local optional=${3:-true}
+    local optional=${3:-false}
     local supp=${4:-false}
 
     test_ok() {
@@ -154,7 +154,7 @@ test() {
 			else
 				cecho "$message"
 			fi
-            (! $NO_ANSI) && cecho "\e[0;97mTesting... \e[0;37m($((TEST_MAIN_OK + TEST_SUPP_OK)) passed, $((TEST_MAIN_FAIL + TEST_SUPP_FAIL)) failed, $((TEST_MAIN_SKIP + TEST_SUPP_SKIP)) skipped, $(((TEST_MAIN_OK + TEST_MAIN_FAIL + TEST_MAIN_SKIP + TEST_SUPP_OK + TEST_SUPP_FAIL + TEST_SUPP_SKIP)*100/(34+ TEST_SUPP_OK + TEST_SUPP_FAIL + TEST_SUPP_SKIP)))%%)"
+            (! $NO_ANSI) && cecho "\e[0;97mTesting... \e[0;37m($((TEST_MAIN_OK + TEST_SUPP_OK)) passed, $((TEST_MAIN_FAIL + TEST_SUPP_FAIL)) failed, $((TEST_MAIN_SKIP + TEST_SUPP_SKIP)) skipped, $(((TEST_MAIN_OK + TEST_MAIN_FAIL + TEST_MAIN_SKIP + TEST_SUPP_OK + TEST_SUPP_FAIL + TEST_SUPP_SKIP)*100/(MAIN_TESTS + TEST_SUPP_OK + TEST_SUPP_FAIL + TEST_SUPP_SKIP)))%%)"
 		fi
     }
 
